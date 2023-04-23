@@ -1,0 +1,88 @@
+:root {
+  --text-color: #1e293b;
+  --font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  --size-toggle: 28px;
+}
+
+body {
+  color: var(--text-color);
+  font-family: var(--font-family);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.jobs-generator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f1f5f9;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  height: var(--size-toggle);
+  aspect-ratio: 60/34;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #9ca3af;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: calc(var(--size-toggle) - 8px);
+  width: calc(var(--size-toggle) - 8px);
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #2196f3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(calc(var(--size-toggle) - 8px));
+  -ms-transform: translateX(calc(var(--size-toggle) - 8px));
+  transform: translateX(calc(var(--size-toggle) - 8px));
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: var(--size-toggle);
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

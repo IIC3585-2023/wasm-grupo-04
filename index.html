@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WASM - G4</title>
+
+    <script src="functions/solver.js"></script>
+    <link rel="stylesheet" href="index.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+
+    <script>
+      function problemGen() {
+        let n_jobs = document.getElementById("n_jobs").value;
+        let max_time = document.getElementById("max_time").value;
+        let jobs = Array.from(
+          { length: n_jobs },
+          () => Math.floor(Math.random() * max_time) + 1
+        );
+        document.getElementById("jobs_array").value = jobs;
+      }
+
+      function solve() {
+        let jobs = document.getElementById("jobs_array").value;
+        jobs = jobs.split(",").map((x) => parseInt(x));
+        let n_clusters = document.getElementById("n_clusters").value;
+        let result = js_solver(jobs, n_clusters);
+        document.getElementById("result").value = result;
+      }
+
+      function switchButton() {
+        const switchButton = document.getElementById("switch");
+        const nJobsInput = document.getElementById("n_jobs");
+        const maxTimeInput = document.getElementById("max_time");
+        nJobsInput.disabled = !switchButton.checked;
+        maxTimeInput.disabled = !switchButton.checked;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>WASM - G4</h1>
+    <section class="jobs-generator">
+      <h3>Random Jobs Generator</h3>
+      <div class="input-group">
+        <span>N° jobs</span>
+        <input
+          type="number"
+          id="n_jobs"
+          placeholder="Number of jobs"
+          value="10"
+          disabled
+          onchange="problemGen()"
+        />
+      </div>
+      <div class="input-group">
+        <span>Max time</span>
+        <input
+          type="number"
+          id="max_time"
+          placeholder="Max time"
+          value="100"
+          disabled
+          onchange="problemGen()"
+        />
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="switch" onclick="switchButton()" />
+        <span class="slider round"></span>
+      </label>
+    </section>
+    <div class="input-group">
+      <span>Jobs</span>
+      <input type="text" id="jobs_array" class="jobs" />
+    </div>
+    <div class="input-group">
+      <span>N° Clusters</span>
+      <input
+        type="number"
+        id="n_clusters"
+        placeholder="Number of Clusters"
+        value="2"
+      />
+    </div>
+
+    <button onclick="solve()">Solve</button>
+
+    <input readonly type="text" id="result" class="jobs" />
+  </body>
+  <script>
+    problemGen();
+  </script>
+</html>
