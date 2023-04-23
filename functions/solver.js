@@ -7,12 +7,7 @@ function js_solver(jobs, n_clusters) {
 
   // assign each job to the cluster with the least seconds
   for (let j = 0; j < jobs.length; j++) {
-    let best_cluster = 0;
-    for (let c = 0; c < n_clusters; c++) {
-      if (clusters[c] < clusters[best_cluster]) {
-        best_cluster = c;
-      }
-    }
+    let best_cluster = clusters.indexOf(Math.min(...clusters));
     clusters[best_cluster] += jobs[j];
   }
 
