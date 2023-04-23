@@ -1,4 +1,4 @@
-function bestFit(jobs, n_clusters) {
+function js_solver(jobs, n_clusters) {
   // sort jobs in descending order
   jobs.sort((a, b) => b - a);
 
@@ -21,4 +21,4 @@ function bestFit(jobs, n_clusters) {
 
 let jobs = [30, 50, 10, 20, 90];
 let n_clusters = 2;
-console.log(`Min Seconds: ${bestFit(jobs, n_clusters)}`);
+console.log(`Min Seconds: ${js_solver(jobs, n_clusters)}`);

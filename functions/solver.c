@@ -16,7 +16,7 @@ void insertionSort(int jobs[], int n_jobs)
 }
 
 
-int bestFit(int jobs[], int n_jobs, int n_clusters)
+int c_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order
     insertionSort(jobs, n_jobs);
@@ -55,7 +55,7 @@ int main()
     int jobs[] = { 30, 50, 10, 20, 90};
     int n_jobs = sizeof(jobs) / sizeof(jobs[0]);
     int n_clusters = 2;
-    printf("Min Seconds: %d\n", bestFit(jobs, n_jobs, n_clusters));
+    printf("Min Seconds: %d\n", c_solver(jobs, n_jobs, n_clusters));
     return 0;
 }
 
