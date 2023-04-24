@@ -13,19 +13,19 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f0f9ff;
+  background-color: #374151;
 }
 
-main{
+main {
   background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
   gap: 10px;
   width: 100%;
-  max-width: 500px;
+  max-width: 700px;
   padding: 20px 0;
 }
 
@@ -42,7 +42,7 @@ button {
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
-  padding: 0.8rem 1rem;
+  padding: 0.8rem 2rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -135,33 +135,59 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.time-comparison{
+.time-comparison {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  margin: 20px 0;
   flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.time-comparison-item{
+.time-comparison-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 20px;
-  margin: 20px 0;
+  margin: 10px;
   border-radius: 0.5rem;
-  background-color: #e0f2fe;
+  background-color: #d1d5db;
+  color: #030712;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.icon-js{
+.icon-js {
   background-color: black;
   height: fit-content;
   width: fit-content;
 }
 
-.icon-size{
+.icon-size {
   height: 50px;
   width: 50px;
+}
+
+.problem-instance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.jobs-input {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  gap: 10px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }

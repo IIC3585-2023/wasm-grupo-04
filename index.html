@@ -8,7 +8,7 @@
     <script src="functions/webWorker.js"></script>
     <script src="functions/solver.js"></script>
     <script src="functions/vanillaSolver.js"></script>
-    <script src="functions/cSolver.js"></script>
+    <script src="functions/wasm/cSolver.js"></script>
     <link rel="stylesheet" href="index.css" />
     <link
       rel="stylesheet"
@@ -42,20 +42,11 @@
           // Do something with the result
           changeTime("vanilla_time", start);
         });
-        const worker = new Worker("functions/wasmWorker.js");
+        const worker = new Worker("functions/wasm/wasmWorker.js");
         worker.onmessage = (e) => {
           changeTime("wasm_time", start);
         };
         worker.postMessage({ jobs: jobs, n_clusters: n_clusters });
-
-        // const res = solveWithWorker(
-        //   c_solver,
-        //   [pointer, typedArray.length, n_clusters],
-        //   function (result) {
-        //     // Do something with the result
-        //     changeTime("wasm_time", start);
-        //   }
-        // );
       }
 
       function changeTime(idDocument, start) {
@@ -81,65 +72,74 @@
   <body>
     <main>
       <h1>WASM - G4</h1>
-      <section class="jobs-generator off">
-        <h3>Random Jobs Generator</h3>
-        <div class="input-group">
-          <span>N° jobs</span>
-          <input
-            type="number"
-            id="n_jobs"
-            placeholder="Number of jobs"
-            value="1000"
-            disabled
-            onchange="problemGen()"
-          />
-        </div>
-        <div class="input-group">
-          <span>Max time</span>
-          <input
-            type="number"
-            id="max_time"
-            placeholder="Max time"
-            value="100"
-            disabled
-            onchange="problemGen()"
-          />
-        </div>
-        <label class="switch">
-          <input type="checkbox" id="switch" onclick="switchButton()" />
-          <span class="slider round"></span>
-        </label>
+      <section class="problem-instance">
+        <section class="jobs-generator off">
+          <h3>Random Jobs Generator</h3>
+          <div class="input-group">
+            <span>N° jobs</span>
+            <input
+              type="number"
+              id="n_jobs"
+              placeholder="Number of jobs"
+              value="1000"
+              disabled
+              onchange="problemGen()"
+            />
+          </div>
+          <div class="input-group">
+            <span>Max time</span>
+            <input
+              type="number"
+              id="max_time"
+              placeholder="Max time"
+              value="100"
+              disabled
+              onchange="problemGen()"
+            />
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="switch" onclick="switchButton()" />
+            <span class="slider round"></span>
+          </label>
+        </section>
+        <section class="jobs-input">
+          <div class="input-group">
+            <span>Jobs</span>
+            <input type="text" id="jobs_array" class="jobs" />
+          </div>
+          <div class="input-group">
+            <span>N° Clusters</span>
+            <input
+              type="number"
+              id="n_clusters"
+              placeholder="Number of Clusters"
+              value="2"
+            />
+          </div>
+        </section>
       </section>
-      <div class="input-group">
-        <span>Jobs</span>
-        <input type="text" id="jobs_array" class="jobs" />
-      </div>
-      <div class="input-group">
-        <span>N° Clusters</span>
-        <input
-          type="number"
-          id="n_clusters"
-          placeholder="Number of Clusters"
-          value="2"
-        />
-      </div>
 
       <button onclick="solve()">Solve</button>
 
       <section class="time-comparison">
         <div class="time-comparison-item">
           <img src="assets/js_icon.svg" class="icon-js icon-size" />
-          <h3>Full Vanilla</h3>
+          <h3>InsertionSort</h3>
           <span id="vanilla_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
           <img src="assets/js_icon.svg" class="icon-js icon-size" />
-          <h3>With Libraries</h3>
+          <h3>MergeSort</h3>
           <span id="js_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
           <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
-          <h3>C Code</h3>
+          <h3>[C] InsertionSort</h3>
+          <span id="wasm_time">0.000 s</span>
+        </div>
+        <div class="time-comparison-item">
+          <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
+          <h3>[C] QuickSort</h3>
           <span id="wasm_time">0.000 s</span>
         </div>
       </section>
