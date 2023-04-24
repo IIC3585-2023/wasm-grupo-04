@@ -1,18 +1,18 @@
-// vanilla sort
-function insertionSort(arr) {
-  for (let i = 1; i < arr.length; i++) {
-    let current = arr[i];
-    let j = i - 1;
-    while (j >= 0 && arr[j] < current) {
-      arr[j + 1] = arr[j];
-      j--;
-    }
-    arr[j + 1] = current;
-  }
-  return arr;
-}
-
 function vanilla_solver(jobs, n_clusters) {
+  // vanilla sort
+  function insertionSort(arr) {
+    for (let i = 1; i < arr.length; i++) {
+      let current = arr[i];
+      let j = i - 1;
+      while (j >= 0 && arr[j] < current) {
+        arr[j + 1] = arr[j];
+        j--;
+      }
+      arr[j + 1] = current;
+    }
+    return arr;
+  }
+
   // sort jobs in descending order
   jobs = insertionSort(jobs);
 
@@ -41,4 +41,6 @@ function vanilla_solver(jobs, n_clusters) {
 
 let van_jobs = [30, 50, 10, 20, 90];
 let van_n_clusters = 2;
-console.log(`Vanilla: Min Seconds: ${vanilla_solver(van_jobs, van_n_clusters)}`);
+console.log(
+  `Vanilla: Min Seconds: ${vanilla_solver(van_jobs, van_n_clusters)}`
+);

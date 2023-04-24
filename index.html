@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WASM - G4</title>
 
+    <script src="functions/webWorker.js"></script>
     <script src="functions/solver.js"></script>
     <script src="functions/vanillaSolver.js"></script>
     <link rel="stylesheet" href="index.css" />
@@ -25,70 +26,114 @@
       }
 
       function solve() {
+        const resultInput = document.getElementById("result");
         let jobs = document.getElementById("jobs_array").value;
         jobs = jobs.split(",").map((x) => parseInt(x));
         let n_clusters = document.getElementById("n_clusters").value;
-        let result = js_solver(jobs, n_clusters);
-        document.getElementById("result").value = result;
+
+        let start = performance.now();
+        solveWithWorker(js_solver, [jobs, n_clusters], function (result) {
+          // Do something with the result
+          changeTime("js_time", start);
+          resultInput.value = result;
+        });
+        solveWithWorker(vanilla_solver, [jobs, n_clusters], function (result) {
+          // Do something with the result
+          changeTime("vanilla_time", start);
+        });
+
+        document.getElementById("js_time").innerHTML = js_time + " s";
+      }
+
+      function changeTime(idDocument, start) {
+        let end = performance.now();
+        let js_time = (end - start) / 1000;
+        // round to 3 decimals
+        js_time = Math.round(js_time * 1000) / 1000;
+        document.getElementById(idDocument).innerHTML = js_time + " s";
       }
 
       function switchButton() {
         const switchButton = document.getElementById("switch");
         const nJobsInput = document.getElementById("n_jobs");
         const maxTimeInput = document.getElementById("max_time");
+        const genContainer = document.querySelector(".jobs-generator");
         nJobsInput.disabled = !switchButton.checked;
         maxTimeInput.disabled = !switchButton.checked;
+        genContainer.classList.toggle("off");
       }
     </script>
   </head>
   <body>
-    <h1>WASM - G4</h1>
-    <section class="jobs-generator">
-      <h3>Random Jobs Generator</h3>
+    <main>
+      <h1>WASM - G4</h1>
+      <section class="jobs-generator off">
+        <h3>Random Jobs Generator</h3>
+        <div class="input-group">
+          <span>N° jobs</span>
+          <input
+            type="number"
+            id="n_jobs"
+            placeholder="Number of jobs"
+            value="1000"
+            disabled
+            onchange="problemGen()"
+          />
+        </div>
+        <div class="input-group">
+          <span>Max time</span>
+          <input
+            type="number"
+            id="max_time"
+            placeholder="Max time"
+            value="100"
+            disabled
+            onchange="problemGen()"
+          />
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="switch" onclick="switchButton()" />
+          <span class="slider round"></span>
+        </label>
+      </section>
       <div class="input-group">
-        <span>N° jobs</span>
-        <input
-          type="number"
-          id="n_jobs"
-          placeholder="Number of jobs"
-          value="10"
-          disabled
-          onchange="problemGen()"
-        />
+        <span>Jobs</span>
+        <input type="text" id="jobs_array" class="jobs" />
       </div>
       <div class="input-group">
-        <span>Max time</span>
+        <span>N° Clusters</span>
         <input
           type="number"
-          id="max_time"
-          placeholder="Max time"
-          value="100"
-          disabled
-          onchange="problemGen()"
+          id="n_clusters"
+          placeholder="Number of Clusters"
+          value="2"
         />
       </div>
-      <label class="switch">
-        <input type="checkbox" id="switch" onclick="switchButton()" />
-        <span class="slider round"></span>
-      </label>
-    </section>
-    <div class="input-group">
-      <span>Jobs</span>
-      <input type="text" id="jobs_array" class="jobs" />
-    </div>
-    <div class="input-group">
-      <span>N° Clusters</span>
-      <input
-        type="number"
-        id="n_clusters"
-        placeholder="Number of Clusters"
-        value="2"
-      />
-    </div>
 
-    <button onclick="solve()">Solve</button>
+      <button onclick="solve()">Solve</button>
 
-    <input readonly type="text" id="result" class="jobs" />
+      <section class="time-comparison">
+        <div class="time-comparison-item">
+          <img src="assets/js_icon.svg" class="icon-js icon-size" />
+          <h3>Full Vanilla</h3>
+          <span id="vanilla_time">0 s</span>
+        </div>
+        <div class="time-comparison-item">
+          <img src="assets/js_icon.svg" class="icon-js icon-size" />
+          <h3>With Libraries</h3>
+          <span id="js_time">0 s</span>
+        </div>
+        <div class="time-comparison-item">
+          <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
+          <h3>C Code</h3>
+          <span id="wasm_time">0 s</span>
+        </div>
+      </section>
+      <div class="input-group">
+        <span>Result</span>
+        <input readonly type="text" id="result" class="jobs" />
+      </div>
+    </main>
   </body>
   <script>
     problemGen();
