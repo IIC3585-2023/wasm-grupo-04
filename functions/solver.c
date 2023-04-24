@@ -1,6 +1,9 @@
 #include <stdio.h>
+#include <emscripten.h>
+
 
 // insertion sort descending
+
 void insertionSort(int jobs[], int n_jobs)
 {
     int i, key, j;
@@ -14,8 +17,7 @@ void insertionSort(int jobs[], int n_jobs)
         jobs[j + 1] = key;
     }
 }
-
-
+EMSCRIPTEN_KEEPALIVE
 int c_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order
@@ -48,16 +50,9 @@ int c_solver(int jobs[], int n_jobs, int n_clusters)
     }
 
     return total_seconds;
+
 }
 
-int main()
-{
-    int jobs[] = { 30, 50, 10, 20, 90};
-    int n_jobs = sizeof(jobs) / sizeof(jobs[0]);
-    int n_clusters = 2;
-    printf("Min Seconds: %d\n", c_solver(jobs, n_jobs, n_clusters));
-    return 0;
-}
 
 
 // gcc solver.c -o solver
