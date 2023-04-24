@@ -8,6 +8,7 @@
     <script src="functions/webWorker.js"></script>
     <script src="functions/solver.js"></script>
     <script src="functions/vanillaSolver.js"></script>
+    <script src="functions/cSolver.js"></script>
     <link rel="stylesheet" href="index.css" />
     <link
       rel="stylesheet"
@@ -41,6 +42,20 @@
           // Do something with the result
           changeTime("vanilla_time", start);
         });
+        const worker = new Worker("functions/wasmWorker.js");
+        worker.onmessage = (e) => {
+          changeTime("wasm_time", start);
+        };
+        worker.postMessage({ jobs: jobs, n_clusters: n_clusters });
+
+        // const res = solveWithWorker(
+        //   c_solver,
+        //   [pointer, typedArray.length, n_clusters],
+        //   function (result) {
+        //     // Do something with the result
+        //     changeTime("wasm_time", start);
+        //   }
+        // );
       }
 
       function changeTime(idDocument, start) {
