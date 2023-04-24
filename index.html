@@ -41,16 +41,15 @@
           // Do something with the result
           changeTime("vanilla_time", start);
         });
-
-        document.getElementById("js_time").innerHTML = js_time + " s";
       }
 
       function changeTime(idDocument, start) {
         let end = performance.now();
-        let js_time = (end - start) / 1000;
+        let time = (end - start) / 1000;
         // round to 3 decimals
-        js_time = Math.round(js_time * 1000) / 1000;
-        document.getElementById(idDocument).innerHTML = js_time + " s";
+        time = Math.round(time * 1000) / 1000;
+        time = time.toString().padEnd(5, "0");
+        document.getElementById(idDocument).innerHTML = time + " s";
       }
 
       function switchButton() {
@@ -116,17 +115,17 @@
         <div class="time-comparison-item">
           <img src="assets/js_icon.svg" class="icon-js icon-size" />
           <h3>Full Vanilla</h3>
-          <span id="vanilla_time">0 s</span>
+          <span id="vanilla_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
           <img src="assets/js_icon.svg" class="icon-js icon-size" />
           <h3>With Libraries</h3>
-          <span id="js_time">0 s</span>
+          <span id="js_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
           <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
           <h3>C Code</h3>
-          <span id="wasm_time">0 s</span>
+          <span id="wasm_time">0.000 s</span>
         </div>
       </section>
       <div class="input-group">
