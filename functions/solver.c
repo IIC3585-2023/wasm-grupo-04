@@ -58,7 +58,5 @@ int main()
     return 0;
 }
 
-//Reference for quicksort: https://www.geeksforgeeks.org/quick-sort/
-
 // gcc solver.c -o solver
 // ./solver
