@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <emscripten.h>
 
 void swap(int* a, int* b)
 {
@@ -30,7 +31,7 @@ void quickSort(int jobs[], int low, int high)
         quickSort(jobs, pi + 1, high);
     }
 }
-
+EMSCRIPTEN_KEEPALIVE
 int c_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order

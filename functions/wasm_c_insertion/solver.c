@@ -53,7 +53,7 @@ int c_solver(int jobs[], int n_jobs, int n_clusters)
 
 }
 
-
-
 // gcc solver.c -o solver
 // ./solver
+
+//Reference for insertion sort: https://www.geeksforgeeks.org/insertion-sort/

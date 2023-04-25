@@ -62,6 +62,14 @@
           }
         );
         solveWithWASMWorker(
+          "wasm_c_quicksort",
+          [jobs, n_clusters],
+          function (result) {
+            changeTime("wasm_c_qs_time", start);
+            results.push(result);
+          }
+        );
+        solveWithWASMWorker(
           "wasm_cpp_insertion",
           [jobs, n_clusters],
           function (result) {
@@ -173,6 +181,11 @@
           <img src="assets/c.png" class="icon-size" />
           <h3>InsertionSort</h3>
           <span id="wasm_c_time">0.000 s</span>
+        </div>
+        <div class="time-comparison-item">
+          <img src="assets/c.png" class="icon-size" />
+          <h3>QuickSort</h3>
+          <span id="wasm_c_qs_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
           <img src="assets/cpp.png" class="icon-size" />
