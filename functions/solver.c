@@ -51,7 +51,6 @@ int c_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order
     insertionSort(jobs, n_jobs);
-    quickSort(jobs, 0, n_jobs - 1);
  
     int clusters[n_clusters];
     // initialize all clusters to 0
