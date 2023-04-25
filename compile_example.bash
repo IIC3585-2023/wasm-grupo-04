@@ -1,0 +1,1 @@
+emcc -sEXPORTED_FUNCTIONS=_malloc,_free -sEXPORTED_RUNTIME_METHODS=ccall -s EXTRA_EXPORTED_RUNTIME_METHODS=["cwrap"] -O3 -o result/cSolver.js test/solver.c

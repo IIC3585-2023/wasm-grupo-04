@@ -8,7 +8,7 @@
     <script src="functions/webWorker.js"></script>
     <script src="functions/solver.js"></script>
     <script src="functions/vanillaSolver.js"></script>
-    <script src="functions/wasm/cSolver.js"></script>
+    <!-- <script src="functions/wasm_cpp/cSolver.js"></script> -->
     <link rel="stylesheet" href="index.css" />
     <link
       rel="stylesheet"
@@ -16,6 +16,16 @@
     />
 
     <script>
+      function solveWithWASMWorker(path_name, args, callback) {
+        const worker = new Worker(`functions/${path_name}/wasmWorker.js`);
+        worker.postMessage(args);
+        worker.onmessage = (event) => {
+          callback(event.data);
+        };
+        worker.onerror = (error) => {
+          console.log(error);
+        };
+      }
       function problemGen() {
         let n_jobs = document.getElementById("n_jobs").value;
         let max_time = document.getElementById("max_time").value;
@@ -32,21 +42,43 @@
         jobs = jobs.split(",").map((x) => parseInt(x));
         let n_clusters = document.getElementById("n_clusters").value;
 
+        var results = [];
         let start = performance.now();
         solveWithWorker(js_solver, [jobs, n_clusters], function (result) {
-          // Do something with the result
           changeTime("js_time", start);
           resultInput.value = result;
+          results.push(result);
         });
         solveWithWorker(vanilla_solver, [jobs, n_clusters], function (result) {
-          // Do something with the result
           changeTime("vanilla_time", start);
+          results.push(result);
         });
-        const worker = new Worker("functions/wasm/wasmWorker.js");
-        worker.onmessage = (e) => {
-          changeTime("wasm_time", start);
-        };
-        worker.postMessage({ jobs: jobs, n_clusters: n_clusters });
+        solveWithWASMWorker(
+          "wasm_c_insertion",
+          [jobs, n_clusters],
+          function (result) {
+            changeTime("wasm_c_time", start);
+            results.push(result);
+          }
+        );
+        solveWithWASMWorker(
+          "wasm_cpp_insertion",
+          [jobs, n_clusters],
+          function (result) {
+            changeTime("wasm_cpp_insertion_time", start);
+            results.push(result);
+          }
+        );
+        solveWithWASMWorker(
+          "wasm_cpp_quick",
+          [jobs, n_clusters],
+          function (result) {
+            changeTime("wasm_cpp_quick_time", start);
+            results.push(result);
+            // console log if all results are equal
+            console.log(results)
+          }
+        );
       }
 
       function changeTime(idDocument, start) {
@@ -71,7 +103,8 @@
   </head>
   <body>
     <main>
-      <h1>WASM - G4</h1>
+      <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
+      <h1>WEBASSEMBLY</h1>
       <section class="problem-instance">
         <section class="jobs-generator off">
           <h3>Random Jobs Generator</h3>
@@ -133,14 +166,19 @@
           <span id="js_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
-          <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
-          <h3>[C] InsertionSort</h3>
-          <span id="wasm_time">0.000 s</span>
+          <img src="assets/c.png" class="icon-size" />
+          <h3>InsertionSort</h3>
+          <span id="wasm_c_time">0.000 s</span>
         </div>
         <div class="time-comparison-item">
-          <img src="assets/wasm_icon.png" class="icon-wasm icon-size" />
-          <h3>[C] QuickSort</h3>
-          <span id="wasm_time">0.000 s</span>
+          <img src="assets/cpp.png" class="icon-size" />
+          <h3>InsertionSort</h3>
+          <span id="wasm_cpp_insertion_time">0.000 s</span>
+        </div>
+        <div class="time-comparison-item">
+          <img src="assets/cpp.png" class="icon-size" />
+          <h3>QuickSort</h3>
+          <span id="wasm_cpp_quick_time">0.000 s</span>
         </div>
       </section>
       <div class="input-group">
