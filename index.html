@@ -14,124 +14,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-
-    <script>
-      var runningTimers = {
-        js_time: false,
-        vanilla_time: false,
-        wasm_c_time: false,
-        wasm_c_qs_time: false,
-        wasm_cpp_insertion_time: false,
-        wasm_cpp_quick_time: false,
-      };
-
-      function solveWithWASMWorker(path_name, array_args, callback) {
-        let args = { jobs: array_args[0], n_clusters: array_args[1] };
-        const worker = new Worker(`functions/${path_name}/wasmWorker.js`);
-        worker.onmessage = (event) => {
-          callback(event.data);
-        };
-        worker.postMessage(args);
-      }
-
-      function problemGen() {
-        let n_jobs = document.getElementById("n_jobs").value;
-        let max_time = document.getElementById("max_time").value;
-        let jobs = Array.from(
-          { length: n_jobs },
-          () => Math.floor(Math.random() * max_time) + 1
-        );
-        document.getElementById("jobs_array").value = jobs;
-      }
-
-      function solve() {
-        const resultInput = document.getElementById("result");
-        let jobs = document.getElementById("jobs_array").value;
-        jobs = jobs.split(",").map((x) => parseInt(x));
-        let n_clusters = document.getElementById("n_clusters").value;
-        const button = document.getElementById("button-solve");
-        button.disabled = true;
-        button.classList.toggle("off");
-
-        const toggleRunningDiv = (idDocument) => {
-          document
-            .getElementById(`${idDocument}-div`)
-            .classList.toggle("running");
-        };
-
-        for (const [idDocument, running] of Object.entries(runningTimers)) {
-          runningTimers[idDocument] = true;
-          toggleRunningDiv(idDocument);
-        }
-
-        runAllTimers();
-
-        solveWithWorker(js_solver, [jobs, n_clusters], function (result) {
-          resultInput.value = result;
-          runningTimers["js_time"] = false;
-          toggleRunningDiv("js_time");
-        });
-        solveWithWorker(vanilla_solver, [jobs, n_clusters], function (result) {
-          runningTimers["vanilla_time"] = false;
-          toggleRunningDiv("vanilla_time");
-        });
-
-        const wasmWorkers = {
-          wasm_c_insertion: "wasm_c_time",
-          wasm_c_quicksort: "wasm_c_qs_time",
-          wasm_cpp_insertion: "wasm_cpp_insertion_time",
-          wasm_cpp_quick: "wasm_cpp_quick_time",
-        };
-
-        for (const [path_name, idDocument] of Object.entries(wasmWorkers)) {
-          solveWithWASMWorker(path_name, [jobs, n_clusters], function (result) {
-            runningTimers[idDocument] = false;
-            toggleRunningDiv(idDocument);
-          });
-        }
-      }
-
-      function runAllTimers() {
-        // update every 1 ms all documents where the timer is running
-        // then clear the interval when all timers are stopped
-        const start = performance.now();
-        const interval = setInterval(function () {
-          for (const [idDocument, running] of Object.entries(runningTimers)) {
-            if (running) {
-              changeTime(idDocument, start);
-            }
-          }
-          if (
-            Object.values(runningTimers).every((val) => val === false) &&
-            Object.values(runningTimers).length > 0
-          ) {
-            clearInterval(interval);
-            const button = document.getElementById("button-solve");
-            button.disabled = false;
-            button.classList.toggle("off");
-          }
-        }, 1);
-      }
-
-      function changeTime(idDocument, start) {
-        let end = performance.now();
-        let time = (end - start) / 1000;
-        // round to 3 decimals
-        time = Math.round(time * 1000) / 1000;
-        time = time.toString().padEnd(5, "0");
-        document.getElementById(idDocument).innerHTML = time + " s";
-      }
-
-      function switchButton() {
-        const switchButton = document.getElementById("switch");
-        const nJobsInput = document.getElementById("n_jobs");
-        const maxTimeInput = document.getElementById("max_time");
-        const genContainer = document.querySelector(".jobs-generator");
-        nJobsInput.disabled = !switchButton.checked;
-        maxTimeInput.disabled = !switchButton.checked;
-        genContainer.classList.toggle("off");
-      }
-    </script>
   </head>
   <body>
     <main>
@@ -168,6 +50,16 @@
           </label>
         </section>
         <section class="jobs-input">
+          <span style="text-align: center">Sort Jobs</span>
+          <div class="sort-container">
+            <button onclick="inputSort('rand')" class="button-sort">
+              Random
+            </button>
+            <button onclick="inputSort('asc')" class="button-sort">Asc</button>
+            <button onclick="inputSort('desc')" class="button-sort">
+              Desc
+            </button>
+          </div>
           <div class="input-group">
             <span>Jobs</span>
             <input type="text" id="jobs_array" class="jobs" />
@@ -184,7 +76,9 @@
         </section>
       </section>
 
-      <button onclick="solve()" id="button-solve">Solve</button>
+      <button onclick="solve()" class="button-solve" id="button-solve">
+        Solve
+      </button>
 
       <section class="time-comparison">
         <div class="time-comparison-item running" id="vanilla_time-div">
@@ -227,6 +121,7 @@
       </div>
     </main>
   </body>
+  <script src="index.js"></script>
   <script>
     problemGen();
   </script>
