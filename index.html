@@ -16,6 +16,15 @@
     />
 
     <script>
+      var runningTimers = {
+        js_time: false,
+        vanilla_time: false,
+        wasm_c_time: false,
+        wasm_c_qs_time: false,
+        wasm_cpp_insertion_time: false,
+        wasm_cpp_quick_time: false,
+      };
+
       function solveWithWASMWorker(path_name, array_args, callback) {
         let args = { jobs: array_args[0], n_clusters: array_args[1] };
         const worker = new Worker(`functions/${path_name}/wasmWorker.js`);
@@ -40,57 +49,51 @@
         let jobs = document.getElementById("jobs_array").value;
         jobs = jobs.split(",").map((x) => parseInt(x));
         let n_clusters = document.getElementById("n_clusters").value;
+        for (const [idDocument, running] of Object.entries(runningTimers)) {
+          runningTimers[idDocument] = true;
+        }
+        runAllTimers();
 
-        var results = [];
-        let start = performance.now();
         solveWithWorker(js_solver, [jobs, n_clusters], function (result) {
-          changeTime("js_time", start);
           resultInput.value = result;
-          results.push(result);
+          runningTimers["js_time"] = false;
         });
         solveWithWorker(vanilla_solver, [jobs, n_clusters], function (result) {
-          changeTime("vanilla_time", start);
-          results.push(result);
+          runningTimers["vanilla_time"] = false;
         });
 
-        solveWithWASMWorker(
-          "wasm_c_insertion",
-          [jobs, n_clusters],
-          function (result) {
-            changeTime("wasm_c_time", start);
-            results.push(result);
+        const wasmWorkers = {
+          wasm_c_insertion: "wasm_c_time",
+          wasm_c_quicksort: "wasm_c_qs_time",
+          wasm_cpp_insertion: "wasm_cpp_insertion_time",
+          wasm_cpp_quick: "wasm_cpp_quick_time",
+        };
+
+        for (const [path_name, idDocument] of Object.entries(wasmWorkers)) {
+          solveWithWASMWorker(path_name, [jobs, n_clusters], function (result) {
+            runningTimers[idDocument] = false;
+          });
+        }
+
+      }
+
+      function runAllTimers() {
+        // update every 1 ms all documents where the timer is running
+        // then clear the interval when all timers are stopped
+        const start = performance.now();
+        const interval = setInterval(function () {
+          for (const [idDocument, running] of Object.entries(runningTimers)) {
+            if (running) {
+              changeTime(idDocument, start);
+            }
           }
-        );
-        solveWithWASMWorker(
-          "wasm_c_quicksort",
-          [jobs, n_clusters],
-          function (result) {
-            changeTime("wasm_c_qs_time", start);
-            results.push(result);
+          if (
+            Object.values(runningTimers).every((val) => val === false)
+          ) {
+            clearInterval(interval);
           }
-        );
-        solveWithWASMWorker(
-          "wasm_cpp_insertion",
-          [jobs, n_clusters],
-          function (result) {
-            changeTime("wasm_cpp_insertion_time", start);
-            results.push(result);
-          }
-        );
-        solveWithWASMWorker(
-          "wasm_cpp_quick",
-          [jobs, n_clusters],
-          function (result) {
-            changeTime("wasm_cpp_quick_time", start);
-            results.push(result);
-          }
-        );
-        setTimeout(function () {
-          console.log(
-            "All results are equal: " +
-              results.every((val, i, arr) => val === arr[0])
-          );
-        }, 1000);
+        }, 1);
+
       }
 
       function changeTime(idDocument, start) {
