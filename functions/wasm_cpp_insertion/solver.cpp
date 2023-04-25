@@ -50,3 +50,4 @@ extern "C" int cpp_solver(int jobs[], int n_jobs, int n_clusters)
     return total_seconds;
 }
 
+//Reference for insertion sort: https://www.geeksforgeeks.org/insertion-sort/
