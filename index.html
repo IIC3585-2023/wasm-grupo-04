@@ -9,6 +9,8 @@
     <script src="functions/solver.js"></script>
     <script src="functions/vanillaSolver.js"></script>
     <script src="functions/cSolver.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="heatmap.js"></script>
     <link rel="stylesheet" href="index.css" />
     <link
       rel="stylesheet"
@@ -16,6 +18,27 @@
     />
 
     <script>
+      const heatmap_data = {
+        vanillaJS: {
+          x_label: "VanillaJS",
+          algorithms: ["QuickSort"],
+          image_label: "js.png",
+        },
+        librariesJS: {
+          x_label: "JS + libraries",
+          algorithms: ["QuickSort"],
+          image_label: "js.png",
+        },
+        cWasm: {
+          x_label: "C code",
+          algorithms: ["QuickSort"],
+          image_label: "wasm_icon.png",
+        },
+      };
+
+      window.addEventListener("load", function () {
+        heatmapInit(heatmap_data);
+      });
       function problemGen() {
         let n_jobs = document.getElementById("n_jobs").value;
         let max_time = document.getElementById("max_time").value;
@@ -31,20 +54,47 @@
         let jobs = document.getElementById("jobs_array").value;
         jobs = jobs.split(",").map((x) => parseInt(x));
         let n_clusters = document.getElementById("n_clusters").value;
-
+        startAnimation(
+          heatmap_data.vanillaJS.x_label,
+          heatmap_data.vanillaJS.algorithms
+        );
+        startAnimation(
+          heatmap_data.librariesJS.x_label,
+          heatmap_data.librariesJS.algorithms
+        );
+        startAnimation(
+          heatmap_data.cWasm.x_label,
+          heatmap_data.cWasm.algorithms
+        );
         let start = performance.now();
         solveWithWorker(js_solver, [jobs, n_clusters], function (result) {
           // Do something with the result
-          changeTime("js_time", start);
+          changeTime(
+            "js_time",
+            start,
+            heatmap_data.librariesJS.x_label,
+            heatmap_data.librariesJS.algorithms
+          );
           resultInput.value = result;
         });
         solveWithWorker(vanilla_solver, [jobs, n_clusters], function (result) {
           // Do something with the result
-          changeTime("vanilla_time", start);
+          changeTime(
+            "vanilla_time",
+            start,
+            heatmap_data.vanillaJS.x_label,
+            heatmap_data.vanillaJS.algorithms
+          );
         });
         const worker = new Worker("functions/wasmWorker.js");
+
         worker.onmessage = (e) => {
-          changeTime("wasm_time", start);
+          changeTime(
+            "wasm_time",
+            start,
+            heatmap_data.cWasm.x_label,
+            heatmap_data.cWasm.algorithms
+          );
         };
         worker.postMessage({ jobs: jobs, n_clusters: n_clusters });
 
@@ -58,12 +108,13 @@
         // );
       }
 
-      function changeTime(idDocument, start) {
+      function changeTime(idDocument, start, heatmap_x_label, heatmap_y_label) {
         let end = performance.now();
         let time = (end - start) / 1000;
         // round to 3 decimals
         time = Math.round(time * 1000) / 1000;
         time = time.toString().padEnd(5, "0");
+        stopAnimation(heatmap_x_label, heatmap_y_label, time);
         document.getElementById(idDocument).innerHTML = time + " s";
       }
 
@@ -143,6 +194,7 @@
           <span id="wasm_time">0.000 s</span>
         </div>
       </section>
+      <div id="heatmap"></div>
       <div class="input-group">
         <span>Result</span>
         <input readonly type="text" id="result" class="jobs" />
