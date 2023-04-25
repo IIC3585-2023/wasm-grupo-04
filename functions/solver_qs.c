@@ -1,24 +1,41 @@
 #include <stdio.h>
 
-// insertion sort descending
-void insertionSort(int jobs[], int n_jobs)
+void swap(int* a, int* b)
 {
-    int i, key, j;
-    for (i = 1; i < n_jobs; i++) {
-        key = jobs[i];
-        j = i - 1;
-        while (j >= 0 && jobs[j] < key) {
-            jobs[j + 1] = jobs[j];
-            j = j - 1;
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
+ 
+int partition(int arr[], int low, int high)
+{
+    int pivot = arr[high];
+    int i = (low - 1);
+ 
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] > pivot) {
+            i++;
+            swap(&arr[i], &arr[j]);
         }
-        jobs[j + 1] = key;
+    }
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+ 
+void quickSort(int jobs[], int low, int high)
+{
+    if (low < high) {
+        int pi = partition(jobs, low, high);
+        quickSort(jobs, low, pi - 1);
+        quickSort(jobs, pi + 1, high);
     }
 }
+
 
 int c_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order
-    insertionSort(jobs, n_jobs);
+    quickSort(jobs, 0, n_jobs - 1);
  
     int clusters[n_clusters];
     // initialize all clusters to 0
@@ -59,6 +76,3 @@ int main()
 }
 
 //Reference for quicksort: https://www.geeksforgeeks.org/quick-sort/
-
-// gcc solver.c -o solver
-// ./solver
