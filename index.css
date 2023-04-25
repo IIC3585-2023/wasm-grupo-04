@@ -1,5 +1,5 @@
 :root {
-  --text-color: #172554;
+  --text-color: #2e1065;
   --button-color: #654ef0;
   --font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
@@ -43,24 +43,24 @@ input {
   padding: 0.5rem;
 }
 
-button {
+.button-solve {
   background-color: var(--button-color);
   color: white;
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
-  padding: 0.8rem 2rem;
+  padding: 0.8rem 4rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
+.button-solve:hover {
   background-color: #8b5cf6;
   box-shadow: 0 4px 8px rgba(0, 177, 226, 0.2);
 }
 
-button:active {
+.button-solve:active {
   transform: translateY(2px);
 }
 
@@ -175,6 +175,11 @@ input:checked + .slider:before {
   box-shadow: 0 2px 4px rgba(0, 255, 0, 0.4);
 }
 
+.standby {
+  border: 3px solid #f59e0b;
+  box-shadow: 0 2px 4px rgba(255, 255, 0, 0.4);
+}
+
 .icon-js {
   background-color: black;
   height: fit-content;
@@ -207,4 +212,28 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+}
+
+.sort-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+
+.button-sort{
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  font-weight: bold;
+  font-size: 0.8rem;
+  border: 2px solid var(--text-color);
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.button-sort:hover{
+  background-color: var(--button-color);
+  color: white;
 }
