@@ -16,16 +16,15 @@
     />
 
     <script>
-      function solveWithWASMWorker(path_name, args, callback) {
+      function solveWithWASMWorker(path_name, array_args, callback) {
+        let args = { jobs: array_args[0], n_clusters: array_args[1] };
         const worker = new Worker(`functions/${path_name}/wasmWorker.js`);
-        worker.postMessage(args);
         worker.onmessage = (event) => {
           callback(event.data);
         };
-        worker.onerror = (error) => {
-          console.log(error);
-        };
+        worker.postMessage(args);
       }
+
       function problemGen() {
         let n_jobs = document.getElementById("n_jobs").value;
         let max_time = document.getElementById("max_time").value;
@@ -53,6 +52,7 @@
           changeTime("vanilla_time", start);
           results.push(result);
         });
+
         solveWithWASMWorker(
           "wasm_c_insertion",
           [jobs, n_clusters],
@@ -75,10 +75,14 @@
           function (result) {
             changeTime("wasm_cpp_quick_time", start);
             results.push(result);
-            // console log if all results are equal
-            console.log(results)
           }
         );
+        setTimeout(function () {
+          console.log(
+            "All results are equal: " +
+              results.every((val, i, arr) => val === arr[0])
+          );
+        }, 1000);
       }
 
       function changeTime(idDocument, start) {
