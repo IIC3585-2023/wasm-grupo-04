@@ -81,38 +81,47 @@
       </button>
 
       <section class="time-comparison">
-        <div class="time-comparison-item running" id="vanilla_time-div">
-          <img src="assets/js_icon.svg" class="icon-js icon-size" />
-          <h3>InsertionSort</h3>
-          <span id="vanilla_time">0.000 s</span>
+        <div class="row">
+          <div class="time-comparison-item running" id="vanilla_time-div">
+            <img src="assets/js_icon.svg" class="icon-js icon-size" />
+            <h3>InsertionSort</h3>
+            <span id="vanilla_time">0.000 s</span>
+          </div>
+          <div class="time-comparison-item running" id="js_time-div">
+            <img src="assets/js_icon.svg" class="icon-js icon-size" />
+            <h3>Browser Func.</h3>
+            <span id="js_time">0.000 s</span>
+          </div>
         </div>
-        <div class="time-comparison-item running" id="js_time-div">
-          <img src="assets/js_icon.svg" class="icon-js icon-size" />
-          <h3>MergeSort</h3>
-          <span id="js_time">0.000 s</span>
+        <div class="row">
+          <div class="time-comparison-item running" id="wasm_c_time-div">
+            <img src="assets/c.png" class="icon-size" />
+            <h3>InsertionSort</h3>
+            <span id="wasm_c_time">0.000 s</span>
+          </div>
+          <div class="time-comparison-item running" id="wasm_c_qs_time-div">
+            <img src="assets/c.png" class="icon-size" />
+            <h3>QuickSort</h3>
+            <span id="wasm_c_qs_time">0.000 s</span>
+          </div>
         </div>
-        <div class="time-comparison-item running" id="wasm_c_time-div">
-          <img src="assets/c.png" class="icon-size" />
-          <h3>InsertionSort</h3>
-          <span id="wasm_c_time">0.000 s</span>
-        </div>
-        <div class="time-comparison-item running" id="wasm_c_qs_time-div">
-          <img src="assets/c.png" class="icon-size" />
-          <h3>QuickSort</h3>
-          <span id="wasm_c_qs_time">0.000 s</span>
-        </div>
-        <div
-          class="time-comparison-item running"
-          id="wasm_cpp_insertion_time-div"
-        >
-          <img src="assets/cpp.png" class="icon-size" />
-          <h3>InsertionSort</h3>
-          <span id="wasm_cpp_insertion_time">0.000 s</span>
-        </div>
-        <div class="time-comparison-item running" id="wasm_cpp_quick_time-div">
-          <img src="assets/cpp.png" class="icon-size" />
-          <h3>QuickSort</h3>
-          <span id="wasm_cpp_quick_time">0.000 s</span>
+        <div class="row">
+          <div
+            class="time-comparison-item running"
+            id="wasm_cpp_insertion_time-div"
+          >
+            <img src="assets/cpp.png" class="icon-size" />
+            <h3>InsertionSort</h3>
+            <span id="wasm_cpp_insertion_time">0.000 s</span>
+          </div>
+          <div
+            class="time-comparison-item running"
+            id="wasm_cpp_quick_time-div"
+          >
+            <img src="assets/cpp.png" class="icon-size" />
+            <h3>QuickSort</h3>
+            <span id="wasm_cpp_quick_time">0.000 s</span>
+          </div>
         </div>
       </section>
       <div class="input-group">
