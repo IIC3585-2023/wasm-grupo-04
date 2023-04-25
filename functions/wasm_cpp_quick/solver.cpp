@@ -1,71 +1,48 @@
 #include <iostream>
 using namespace std;
 
-int partition(int arr[], int start, int end)
+void swap(int* a, int* b)
 {
+    int t = *a;
+    *a = *b;
+    *b = t;
+}
 
-    int pivot = arr[start];
+int partition(int arr[], int low, int high)
+{
+    int pivot = arr[high];
+    int i = (low - 1);
 
-    int count = 0;
-    for (int i = start + 1; i <= end; i++) {
-        if (arr[i] >= pivot)
-            count++;
-    }
-
-    // Giving pivot element its correct position
-    int pivotIndex = start + count;
-    swap(arr[pivotIndex], arr[start]);
-
-    // Sorting left and right parts of the pivot element
-    int i = start, j = end;
-
-    while (i < pivotIndex && j > pivotIndex) {
-
-        while (arr[i] >= pivot) {
+    for (int j = low; j <= high - 1; j++) {
+        if (arr[j] > pivot) {
             i++;
-        }
-
-        while (arr[j] < pivot) {
-            j--;
-        }
-
-        if (i < pivotIndex && j > pivotIndex) {
-            swap(arr[i++], arr[j--]);
+            swap(&arr[i], &arr[j]);
         }
     }
-
-    return pivotIndex;
+    swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
 }
 
-void quickSort(int arr[], int start, int end)
+void quickSort(int jobs[], int low, int high)
 {
-
-    // base case
-    if (start >= end)
-        return;
-
-    // partitioning the array
-    int p = partition(arr, start, end);
-
-    // Sorting the right part
-    quickSort(arr, start, p - 1);
-
-    // Sorting the left part
-    quickSort(arr, p + 1, end);
+    if (low < high) {
+        int pi = partition(jobs, low, high);
+        quickSort(jobs, low, pi - 1);
+        quickSort(jobs, pi + 1, high);
+    }
 }
-
 
 extern "C" int cpp_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order
-    quickSort(jobs, 0, n_jobs-1);
-    
+    quickSort(jobs, 0, n_jobs - 1);
+
     int clusters[n_clusters];
     // initialize all clusters to 0
     for (int c = 0; c < n_clusters; c++) {
         clusters[c] = 0;
     }
-    
+
     // assign each job to the cluster with the least seconds
     for (int j = 0; j < n_jobs; j++) {
         int best_cluster = 0;
@@ -88,4 +65,3 @@ extern "C" int cpp_solver(int jobs[], int n_jobs, int n_clusters)
 
     return total_seconds;
 }
-
