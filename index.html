@@ -49,17 +49,31 @@
         let jobs = document.getElementById("jobs_array").value;
         jobs = jobs.split(",").map((x) => parseInt(x));
         let n_clusters = document.getElementById("n_clusters").value;
+        const button = document.getElementById("button-solve");
+        button.disabled = true;
+        button.classList.toggle("off");
+
+        const toggleRunningDiv = (idDocument) => {
+          document
+            .getElementById(`${idDocument}-div`)
+            .classList.toggle("running");
+        };
+
         for (const [idDocument, running] of Object.entries(runningTimers)) {
           runningTimers[idDocument] = true;
+          toggleRunningDiv(idDocument);
         }
+
         runAllTimers();
 
         solveWithWorker(js_solver, [jobs, n_clusters], function (result) {
           resultInput.value = result;
           runningTimers["js_time"] = false;
+          toggleRunningDiv("js_time");
         });
         solveWithWorker(vanilla_solver, [jobs, n_clusters], function (result) {
           runningTimers["vanilla_time"] = false;
+          toggleRunningDiv("vanilla_time");
         });
 
         const wasmWorkers = {
@@ -72,9 +86,9 @@
         for (const [path_name, idDocument] of Object.entries(wasmWorkers)) {
           solveWithWASMWorker(path_name, [jobs, n_clusters], function (result) {
             runningTimers[idDocument] = false;
+            toggleRunningDiv(idDocument);
           });
         }
-
       }
 
       function runAllTimers() {
@@ -88,12 +102,15 @@
             }
           }
           if (
-            Object.values(runningTimers).every((val) => val === false)
+            Object.values(runningTimers).every((val) => val === false) &&
+            Object.values(runningTimers).length > 0
           ) {
             clearInterval(interval);
+            const button = document.getElementById("button-solve");
+            button.disabled = false;
+            button.classList.toggle("off");
           }
         }, 1);
-
       }
 
       function changeTime(idDocument, start) {
@@ -167,35 +184,38 @@
         </section>
       </section>
 
-      <button onclick="solve()">Solve</button>
+      <button onclick="solve()" id="button-solve">Solve</button>
 
       <section class="time-comparison">
-        <div class="time-comparison-item">
+        <div class="time-comparison-item running" id="vanilla_time-div">
           <img src="assets/js_icon.svg" class="icon-js icon-size" />
           <h3>InsertionSort</h3>
           <span id="vanilla_time">0.000 s</span>
         </div>
-        <div class="time-comparison-item">
+        <div class="time-comparison-item running" id="js_time-div">
           <img src="assets/js_icon.svg" class="icon-js icon-size" />
           <h3>MergeSort</h3>
           <span id="js_time">0.000 s</span>
         </div>
-        <div class="time-comparison-item">
+        <div class="time-comparison-item running" id="wasm_c_time-div">
           <img src="assets/c.png" class="icon-size" />
           <h3>InsertionSort</h3>
           <span id="wasm_c_time">0.000 s</span>
         </div>
-        <div class="time-comparison-item">
+        <div class="time-comparison-item running" id="wasm_c_qs_time-div">
           <img src="assets/c.png" class="icon-size" />
           <h3>QuickSort</h3>
           <span id="wasm_c_qs_time">0.000 s</span>
         </div>
-        <div class="time-comparison-item">
+        <div
+          class="time-comparison-item running"
+          id="wasm_cpp_insertion_time-div"
+        >
           <img src="assets/cpp.png" class="icon-size" />
           <h3>InsertionSort</h3>
           <span id="wasm_cpp_insertion_time">0.000 s</span>
         </div>
-        <div class="time-comparison-item">
+        <div class="time-comparison-item running" id="wasm_cpp_quick_time-div">
           <img src="assets/cpp.png" class="icon-size" />
           <h3>QuickSort</h3>
           <span id="wasm_cpp_quick_time">0.000 s</span>

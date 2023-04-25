@@ -81,6 +81,10 @@ button:active {
   background-color: #d1d5db;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+.off:hover {
+  background-color: #d1d5db;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 
 .switch {
   position: relative;
@@ -162,7 +166,13 @@ input:checked + .slider:before {
   background-color: #d1d5db;
   color: #030712;
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  border: 3px solid red;
+  box-shadow: 0 2px 4px rgba(255, 0, 0, 0.4);
+}
+
+.running {
+  border: 3px solid #34d399;
+  box-shadow: 0 2px 4px rgba(0, 255, 0, 0.4);
 }
 
 .icon-js {
