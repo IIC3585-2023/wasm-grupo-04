@@ -179,15 +179,14 @@ document.addEventListener("round1Finished", function () {
   runTimers(currentRound);
   const [jobs, n_clusters] = getArgs();
   for (const idDocument of currentRound) {
-    runningTimers[idDocument].running = false;
-    // solveWithWASMWorker(
-    //   wasmWorkers[idDocument],
-    //   [jobs, n_clusters],
-    //   function (result) {
-    //     runningTimers[idDocument].running = false;
-    //     toggleRunningDiv(idDocument);
-    //   }
-    // );
+    solveWithWASMWorker(
+      wasmWorkers[idDocument],
+      [jobs, n_clusters],
+      function (result) {
+        runningTimers[idDocument].running = false;
+        toggleRunningDiv(idDocument);
+      }
+    );
   }
 });
 
