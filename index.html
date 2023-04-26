@@ -41,6 +41,8 @@
               placeholder="Max time"
               value="100"
               disabled
+              max="1000"
+              oninput="this.value = this.value > this.max ? this.max : Math.abs(this.value)"
               onchange="problemGen()"
             />
           </div>
