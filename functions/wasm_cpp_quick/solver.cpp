@@ -1,41 +1,80 @@
 #include <iostream>
+#include <stack>
+#include <vector>
+#include <algorithm>
 using namespace std;
-
-void swap(int* a, int* b)
+ 
+int partition(int a[], int start, int end)
 {
-    int t = *a;
-    *a = *b;
-    *b = t;
-}
-
-int partition(int arr[], int low, int high)
-{
-    int pivot = arr[high];
-    int i = (low - 1);
-
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] > pivot) {
-            i++;
-            swap(&arr[i], &arr[j]);
+    // Elija el elemento más a la derecha como un pivote de la array
+    int pivot = a[end];
+ 
+    // los elementos menores que el pivote van a la izquierda de `pIndex`
+    // los elementos más que el pivote van a la derecha de `pIndex`
+    // elementos iguales pueden ir en cualquier dirección
+    int pIndex = start;
+ 
+    // cada vez que encontramos un elemento menor o igual que el pivote, `pIndex`
+    // se incrementa, y ese elemento se colocaría antes del pivote.
+    for (int i = start; i < end; i++)
+    {
+        if (a[i] >= pivot)
+        {
+            swap(a[i], a[pIndex]);
+            pIndex++;
         }
     }
-    swap(&arr[i + 1], &arr[high]);
-    return (i + 1);
+ 
+    // intercambiar `pIndex` con pivote
+    swap (a[pIndex], a[end]);
+ 
+    // devuelve `pIndex` (índice del elemento pivote)
+    return pIndex;
 }
-
-void quickSort(int jobs[], int low, int high)
+ 
+// Rutina iterativa Quicksort
+void quickSort(int a[], int n)
 {
-    if (low < high) {
-        int pi = partition(jobs, low, high);
-        quickSort(jobs, low, pi - 1);
-        quickSort(jobs, pi + 1, high);
+    // crea una stack de `std::pairs` para almacenar el índice inicial y final del subarray
+    stack<pair<int, int>> s;
+ 
+    // obtener el índice inicial y final de la array dada
+    int start = 0;
+    int end = n - 1;
+ 
+    // inserta el índice inicial y final de la array en la stack
+    s.push(make_pair(start, end));
+ 
+    // bucle hasta que la stack esté vacía
+    while (!s.empty())
+    {
+        // elimina el par superior de la lista y comienza el subarray
+        // y los índices finales
+        start = s.top().first, end = s.top().second;
+        s.pop();
+ 
+        // reorganizar los elementos a través del pivote
+        int pivot = partition(a, start, end);
+ 
+        // inserta índices de subarray que contienen elementos que son
+        // menos que el pivote actual para stack
+        if (pivot - 1 > start) {
+            s.push(make_pair(start, pivot - 1));
+        }
+ 
+        // inserta índices de subarray que contienen elementos que son
+        // más que el pivote actual para stack
+        if (pivot + 1 < end) {
+            s.push(make_pair(pivot + 1, end));
+        }
     }
 }
+
 
 extern "C" int cpp_solver(int jobs[], int n_jobs, int n_clusters)
 {
     // sort jobs in descending order
-    quickSort(jobs, 0, n_jobs - 1);
+    quickSort(jobs, n_jobs);
 
     int clusters[n_clusters];
     // initialize all clusters to 0
