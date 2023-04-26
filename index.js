@@ -7,22 +7,22 @@ var runningTimers = {
     running: false,
     round: 1,
   },
-  wasm_c_time: {
-    running: false,
-    round: 2,
-  },
-  wasm_c_qs_time: {
-    running: false,
-    round: 2,
-  },
   wasm_cpp_insertion_time: {
     running: false,
-    round: 3,
+    round: 2,
   },
   wasm_cpp_quick_time: {
     running: false,
-    round: 3,
+    round: 2,
   },
+  // wasm_c_time: {
+  //   running: false,
+  //   round: 3,
+  // },
+  // wasm_c_qs_time: {
+  //   running: false,
+  //   round: 3,
+  // },
 };
 
 var wasmWorkers = {
@@ -175,26 +175,9 @@ function switchButton() {
 }
 
 document.addEventListener("round1Finished", function () {
-  const currentRound = ["wasm_c_time", "wasm_c_qs_time"];
-  runTimers(currentRound);
-  const [jobs, n_clusters] = getArgs();
-  for (const idDocument of currentRound) {
-    solveWithWASMWorker(
-      wasmWorkers[idDocument],
-      [jobs, n_clusters],
-      function (result) {
-        runningTimers[idDocument].running = false;
-        toggleRunningDiv(idDocument);
-      }
-    );
-  }
-});
-
-document.addEventListener("round2Finished", function () {
   const currentRound = ["wasm_cpp_insertion_time", "wasm_cpp_quick_time"];
   runTimers(currentRound);
   const [jobs, n_clusters] = getArgs();
-
   for (const idDocument of currentRound) {
     solveWithWASMWorker(
       wasmWorkers[idDocument],
@@ -207,7 +190,25 @@ document.addEventListener("round2Finished", function () {
   }
 });
 
-document.addEventListener("round3Finished", function () {
+// document.addEventListener("round2Finished", function () {
+//   const currentRound = ["wasm_c_time", "wasm_c_qs_time"];
+//   runTimers(currentRound);
+//   const [jobs, n_clusters] = getArgs();
+
+//   for (const idDocument of currentRound) {
+//     solveWithWASMWorker(
+//       wasmWorkers[idDocument],
+//       [jobs, n_clusters],
+//       function (result) {
+//         runningTimers[idDocument].running = false;
+//         toggleRunningDiv(idDocument);
+//       }
+//     );
+//   }
+// });
+
+// document.addEventListener("round3Finished", function () {
+document.addEventListener("round2Finished", function () {
   console.log("All rounds finished");
   const button = document.getElementById("button-solve");
   if (button.disabled) {

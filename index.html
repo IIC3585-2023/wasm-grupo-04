@@ -41,10 +41,10 @@
               placeholder="Max time"
               value="100"
               disabled
-              max="1000"
-              oninput="this.value = this.value > this.max ? this.max : Math.abs(this.value)"
               onchange="problemGen()"
-            />
+              />
+              <!-- max="1000"
+              oninput="this.value = this.value > this.max ? this.max : Math.abs(this.value)" -->
           </div>
           <label class="switch">
             <input type="checkbox" id="switch" onclick="switchButton()" />
@@ -96,18 +96,6 @@
           </div>
         </div>
         <div class="row">
-          <div class="time-comparison-item running" id="wasm_c_time-div">
-            <img src="assets/c.png" class="icon-size" />
-            <h3>InsertionSort</h3>
-            <span id="wasm_c_time">0.000 s</span>
-          </div>
-          <div class="time-comparison-item running" id="wasm_c_qs_time-div">
-            <img src="assets/c.png" class="icon-size" />
-            <h3>QuickSort</h3>
-            <span id="wasm_c_qs_time">0.000 s</span>
-          </div>
-        </div>
-        <div class="row">
           <div
             class="time-comparison-item running"
             id="wasm_cpp_insertion_time-div"
@@ -124,6 +112,18 @@
             <h3>QuickSort</h3>
             <span id="wasm_cpp_quick_time">0.000 s</span>
           </div>
+          <!-- <div class="row">
+          <div class="time-comparison-item running" id="wasm_c_time-div">
+            <img src="assets/c.png" class="icon-size" />
+            <h3>InsertionSort</h3>
+            <span id="wasm_c_time">0.000 s</span>
+          </div>
+          <div class="time-comparison-item running" id="wasm_c_qs_time-div">
+            <img src="assets/c.png" class="icon-size" />
+            <h3>QuickSort</h3>
+            <span id="wasm_c_qs_time">0.000 s</span>
+          </div>
+        </div> -->
         </div>
       </section>
       <div class="input-group">
